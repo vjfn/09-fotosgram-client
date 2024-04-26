@@ -1,11 +1,10 @@
-<ion-content>
-  <swiper-container class="mainSlide"
+<ion-content class="ion-text-center">
   
-  navigation="true">
-
 
     
-    <swiper-slide class="ion-padding">
+    
+
+    <div class="ion-padding pepe" [hidden]="!div1Visible">
       
 
       <form (ngSubmit)="login(fLogin)" #fLogin="ngForm">
@@ -26,8 +25,9 @@
                     <ion-label></ion-label>
                     <ion-input name="email"
                                 type="email"
-                                [{ngModel}]="loginUser.email"
+                                [(ngModel)]="loginUser.email"
                                 placeholder="Email"
+                                
                                 required></ion-input>
                   </ion-item>
 
@@ -35,8 +35,9 @@
                     <ion-label></ion-label>
                     <ion-input name="password"
                                 type="password"
-                                [{ngModel}]="loginUser.password"
+                                [(ngModel)]="loginUser.password"
                                 placeholder="Password"
+                                
                                 required></ion-input>
                   </ion-item>
 
@@ -58,13 +59,12 @@
         </ion-grid>
       </form>
 
- 
-    
+    </div>
 
+    <div [hidden]="div1Visible">
 
-    </swiper-slide>
-
-    <swiper-slide class="ion-padding">
+    <swiper-container class="mainSlide">
+    <swiper-slide class="ion-padding" [hidden]="div1Visible">
 
       
       <ion-grid fixed>
@@ -99,7 +99,7 @@
                             <ion-label>Email: </ion-label>
                             <ion-input name="email" 
                                         type="email"
-                                  
+                                        [(ngModel)]="registerUser.email"
                                         required></ion-input>
                             </ion-item>
 
@@ -107,7 +107,7 @@
                             <ion-label>Nombre: </ion-label>
                             <ion-input name="nombre"
                                         type="text"
-                                        
+                                        [(ngModel)]="registerUser.nombre"
                                         required></ion-input>
                             </ion-item>
 
@@ -115,6 +115,7 @@
                             <ion-label>Password: </ion-label>
                             <ion-input name="password"
                                         type="password"
+                                        [(ngModel)]="registerUser.password"
                                         required></ion-input>
                             </ion-item>
 
@@ -142,6 +143,8 @@
 
   </swiper-container>
 
+</div>
+
 
 
 </ion-content>
@@ -153,7 +156,8 @@
     <ion-row>
 
       <ion-col>
-          <ion-button shape="round"
+          <ion-button (click)="toggleDivs(1)" [disabled]="buttonDisabled[0]"
+          shape="round"
                       expand="full"
                       size="small"
                       fill="outline"
@@ -163,7 +167,7 @@
       </ion-col>
 
       <ion-col>
-        <ion-button shape="round"
+        <ion-button (click)="toggleDivs(2)" [disabled]="buttonDisabled[1]" shape="round"
                     expand="full"
                     size="small"
                     fill="outline"
