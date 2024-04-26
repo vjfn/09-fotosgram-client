@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+      <ion-back-button
+       defaultHref="/inicio" 
+       text="Volver"
+       color="primary"
+       mode="ios"></ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+        <ion-icon slot="icon-only" name="happy-outline"></ion-icon>
+    </ion-buttons>
+
+    <ion-title>
+      QuéPasa
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" color="light">
+
+<!--   refresher -->
+
+  <ion-refresher slot="fixed" (ionRefresh)="recargar($event)" pullFactor="0.8" pullMin="60" pullMax="120">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+
+  <!--   Posts -->
+  <app-posts [posts]="posts"></app-posts>
+
+<!--   Infinite Scroll brbrbrb -->
+
+<ion-infinite-scroll 
+                    [disabled]="!habilitado"
+                    threshold="150px"
+                    (ionInfinite)="siguientes($event)">
+  <ion-infinite-scroll-content
+  loadingSpinner="lines-sharp"
+  loadingText="Cargando mas contenido...">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
+
+</ion-content>
