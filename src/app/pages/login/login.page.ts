@@ -1,9 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import Swiper from 'swiper';
-import { SwiperContainer, SwiperSlide } from 'swiper/element';
-import { Navigation, Pagination } from 'swiper/modules';
-import { SwiperOptions } from 'swiper/types';
+
 import { UsuarioService } from '../../services/usuario.service';
 import { NavController } from '@ionic/angular';
 import { UiServiceService } from 'src/app/services/ui-service.service';
@@ -25,20 +22,9 @@ export class LoginPage implements OnInit {
   buttonDisabled: boolean[] = [true, false];
 
 
-  avatars = [
-    { img: 'av-1.png', seleccionado: true },
-    { img: 'av-2.png', seleccionado: false },
-    { img: 'av-3.png', seleccionado: false },
-    { img: 'av-4.png', seleccionado: false },
-    { img: 'av-5.png', seleccionado: false },
-    { img: 'av-6.png', seleccionado: false },
-    { img: 'av-7.png', seleccionado: false },
-    { img: 'av-8.png', seleccionado: false },
-  ];
-
   loginUser = {
-    email: '', //victor@email.com
-    password: '' //12345
+    email: 'victor@email.com', //victor@email.com
+    password: '12345' //12345
   };
 
   registerUser : Usuario = {
@@ -107,8 +93,5 @@ export class LoginPage implements OnInit {
     this.usuarioService.registro( this.registerUser)
   }
 
-  seleccionarAvatar( avatar :any ){
-    this.avatars.forEach( av => av.seleccionado = false);
-    avatar.seleccionado = true;
-  }
+
 }

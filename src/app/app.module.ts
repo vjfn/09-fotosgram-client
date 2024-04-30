@@ -12,13 +12,14 @@ import { HttpClientModule } from '@angular/common/http';
 import {register} from 'swiper/element/bundle'
 import { IonicStorageModule } from '@ionic/storage-angular';
 
+
 register();
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
   HttpClientModule,
-  IonicStorageModule.forRoot()
+  IonicStorageModule.forRoot(),
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

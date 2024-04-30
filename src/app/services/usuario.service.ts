@@ -1,71 +1,140 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Token } from '@angular/compiler';
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { Storage } from '@ionic/storage-angular';
-import { environment } from 'src/environments/environment';
 import { Usuario } from '../interfaces/interfaces';
+import { NavController } from '@ionic/angular';
 
-const url = environment.url
+const URL = environment.url;
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-
   token: any = null;
+ private usuario: Usuario = {};
 
-  constructor(private http: HttpClient,
-    private storage: Storage) { }
+  constructor( private http: HttpClient, private storage: Storage, private navCtrl: NavController) {}
 
-  login(email: string, password: string) {
+  login(email:string, password: string){
 
-    const data = { email: email, password: password };
+    const data = {email, password};
+
+    return new Promise(resolve =>{
+
+      this.http.post(`${URL}/user/login`,data).subscribe((resp:any) =>{
+        console.log(resp);
+  
+         if(resp['ok']){
+          this.guardarToken(resp['token']);
+          resolve(true);
+        }else{
+          this.token = null;
+          this.storage.clear()
+          resolve(false);
+        } 
+  
+      })
+
+    })
+
+  }
+  registro (usuario:Usuario){
+
+    return new Promise ( resolve => {
+      this.http.post(`${URL}/user/create`, usuario)
+      .subscribe((resp:any) =>{
+        console.log(resp)
+
+        if(resp['ok']){
+          this.guardarToken(resp['token']);
+          resolve(true);
+        }else{
+          this.token = null;
+          this.storage.clear()
+          resolve(false);
+        } 
+      })
+    })
+  }
+
+  getUsuario(){
+
+    if (!this.usuario._id){
+      this.validaToken();
+    }
+
+    return {...this.usuario}
+  }
+
+
+
+ async guardarToken (token:string){
+    this.token = token;
+   await this.storage.set('token',token)
+  }
+
+  async cargarToken(){
+    this.token = await this.storage.get ('token') || null;
+  }
+
+ async validaToken(): Promise<boolean>{
+
+    await this.cargarToken();
+
+    if (!this.token){
+      this.navCtrl.navigateRoot('/login')
+      return Promise.resolve(false);
+    }
 
     return new Promise(resolve => {
 
-      this.http.post(`${url}/user/login`, data)
-        .subscribe((resp: any) => {
-          console.log(resp);
+      const headers = new HttpHeaders({
+        'x-token': this.token
+      })
 
-          if (resp['ok']) {
-            this.guardarToken(resp['token']);
-            resolve(true)
-          } else {
-            this.token = null;
-            this.storage.clear();
-            resolve(false)
-          }
+      this.http.get(`${URL}/user/`, {headers})
+      .subscribe((resp: any) => {
 
-        })
+       if (resp['ok']){
+        this.usuario = resp['usuario']
+        resolve(true)
+
+       }else{
+        this.navCtrl.navigateRoot('/login')
+        resolve(false);
+       }
+
+      })
+
     });
   }
+  actualizarUsuario(usuario:Usuario){
 
-  registro (usuario:Usuario){
+    const headers = new HttpHeaders({
+      'x-token': this.token
+    });
 
-    return new Promise( resolve => {
+    console.log(usuario)
 
-      this.http.post(`${url}/user/create`, usuario)
-      .subscribe( (resp: any) =>{
-        
-        if (resp['ok']) {
-          this.guardarToken(resp['token']);
-          resolve(true)
-        } else {
-          this.token = null;
-          this.storage.clear();
-          resolve(false)
-        }
-      })
+    return new Promise (resolve =>{
+
+      this.http.put(`${URL}/user/update`, usuario, {headers})
+    .subscribe((resp:any) =>{
+
+      console.log(resp)
+
+      if (resp['ok']){
+        this.guardarToken( resp['token']);
+        resolve(true);
+      }else{
+        resolve(false);
+
+      }
+
     })
-    
 
+    })
   }
-
-  
-
-  async guardarToken(token: string) {
-
-    this.token = token;
-    await this.storage.set('token', token);
-  }
-
-}
+} 
