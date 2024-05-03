@@ -49,6 +49,14 @@ export class Tab2Page {
       const resp = await Geolocation.getCurrentPosition();
       // resp.coords.latitude
       // resp.coords.longitude
+
+      console.log('Current position: ', resp)
+
+      const coords = `${resp.coords.latitude},${resp.coords.longitude}`;
+      console.log(coords)
+
+      //TODO:No asigna las coords correctamente aún
+      this.post.coords != coords;
   
       this.cargandoGeo = false;
     } catch (error) {
